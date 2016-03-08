@@ -173,7 +173,7 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					
 					//select new position 50 cm from current location
 					goalLocation.x = currentLocation.x + (0.5 * cos(goalLocation.theta));
-					goalLocation.y = currentLocation.y + (0.5 * sin(goalLocation.theta));
+					goalLocation.y = currentLocation.y + (0.4 * sin(goalLocation.theta));
 				}
 				
 				//Purposefully fall through to next case without breaking
