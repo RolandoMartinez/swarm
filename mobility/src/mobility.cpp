@@ -36,6 +36,12 @@ float status_publish_interval = 5;
 float killSwitchTimeout = 10;
 std_msgs::Int16 targetDetected; //ID of the detected target
 bool targetsCollected [256] = {0}; //array of booleans indicating whether each target ID has been found
+int mobilityCount = 0; //used t variable in spiral equation
+int *t;
+t = &mobilityCount;
+int *t_0;
+t_0 = new int;
+float prvX, prvY;
 
 // state machine states
 #define STATE_MACHINE_TRANSFORM	0
@@ -87,13 +93,13 @@ int main(int argc, char **argv) {
     string hostname(host);
 
     rng = new random_numbers::RandomNumberGenerator(); //instantiate random number generator
-    goalLocation.theta = rng->uniformReal(0, 2 * M_PI); //set initial random heading
-    
+        
     targetDetected.data = -1; //initialize target detected
     
-    //select initial search position 50 cm from center (0,0)
-	goalLocation.x = 0.5 * cos(goalLocation.theta);
-	goalLocation.y = 0.5 * sin(goalLocation.theta);
+    //Select initial search position based on spiral parametric equation
+	goalLocation.x = *t * cos(*t);
+	goalLocation.y = *t * sin(*t);
+	goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 
     if (argc >= 2) {
         publishedName = argv[1];
@@ -126,7 +132,8 @@ int main(int argc, char **argv) {
     stateMachineTimer = mNH.createTimer(ros::Duration(mobilityLoopTimeStep), mobilityStateMachine);
     
     ros::spin();
-    
+
+    delete t_0;
     return EXIT_SUCCESS;
 }
 
@@ -163,17 +170,17 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					//Otherwise, reset target and select new random uniform heading
 					else {
 						targetDetected.data = -1;
-						goalLocation.theta = rng->uniformReal(0, 2 * M_PI);
+						goalLocation.x = *t * cos(*t);
+						goalLocation.y = *t * sin(*t);
+						goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 					}
 				}
-				//Otherwise, assign a new goal
+				//Otherwise, assign a new goal	``	
 				else {
-					 //select new heading from Gaussian distribution around current heading
-					goalLocation.theta = rng->gaussian(currentLocation.theta, 0.25);
-					
-					//select new position 50 cm from current location
-					goalLocation.x = currentLocation.x + (0.5 * cos(goalLocation.theta));
-					goalLocation.y = currentLocation.y + (0.4 * sin(goalLocation.theta));
+					//Continue following spiral parametric equation
+					goalLocation.x = *t * cos(*t);
+					goalLocation.y = *t * sin(*t);
+					goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 				}
 				
 				//Purposefully fall through to next case without breaking
@@ -201,9 +208,10 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 			//Drive forward
 			//Stay in this state until angle is at least PI/2
 			case STATE_MACHINE_TRANSLATE: {
+				mobilityCount++;	
 				stateMachineMsg.data = "TRANSLATING";
 				if (fabs(angles::shortest_angular_distance(currentLocation.theta, atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x))) < M_PI_2) {
-					setVelocity(0.6, 0.0);
+					setVelocity(0.3, 0.0);
 				}
 				else {
 					setVelocity(0.0, 0.0); //stop
