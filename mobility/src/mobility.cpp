@@ -22,7 +22,7 @@
 using namespace std;
 
 //Random number generator
-random_numbers::RandomNumberGenerator* rng;	
+//random_numbers::RandomNumberGenerator* rng;	
 
 //Mobility Logic Functions
 void setVelocity(double linearVel, double angularVel);
@@ -37,10 +37,6 @@ float killSwitchTimeout = 10;
 std_msgs::Int16 targetDetected; //ID of the detected target
 bool targetsCollected [256] = {0}; //array of booleans indicating whether each target ID has been found
 int mobilityCount = 0; //used t variable in spiral equation
-int *t;
-t = &mobilityCount;
-int *t_0;
-t_0 = new int;
 float prvX, prvY;
 
 // state machine states
@@ -92,13 +88,13 @@ int main(int argc, char **argv) {
     gethostname(host, sizeof (host));
     string hostname(host);
 
-    rng = new random_numbers::RandomNumberGenerator(); //instantiate random number generator
+    //rng = new random_numbers::RandomNumberGenerator(); //instantiate random number generator
         
     targetDetected.data = -1; //initialize target detected
     
     //Select initial search position based on spiral parametric equation
-	goalLocation.x = *t * cos(*t);
-	goalLocation.y = *t * sin(*t);
+	goalLocation.x = 0.05 * mobilityCount * cos(mobilityCount);
+	goalLocation.y = 0.05 * mobilityCount * sin(mobilityCount);
 	goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 
     if (argc >= 2) {
@@ -170,16 +166,16 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					//Otherwise, reset target and select new random uniform heading
 					else {
 						targetDetected.data = -1;
-						goalLocation.x = *t * cos(*t);
-						goalLocation.y = *t * sin(*t);
+						goalLocation.x = prvX;
+						goalLocation.y = prvY;
 						goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 					}
 				}
 				//Otherwise, assign a new goal	``	
 				else {
 					//Continue following spiral parametric equation
-					goalLocation.x = *t * cos(*t);
-					goalLocation.y = *t * sin(*t);
+					goalLocation.x = prvX;
+					goalLocation.y = prvY;
 					goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x)
 				}
 				
@@ -265,7 +261,9 @@ void targetHandler(const std_msgs::Int16::ConstPtr& message) {
         if (!targetsCollected[targetDetected.data]) { 
 	        //set angle to center as goal heading
 			goalLocation.theta = M_PI + atan2(currentLocation.y, currentLocation.x);
-			
+			//Save target location
+			prvX = currentLocation.x;
+			prvY = currentLocation.y;
 			//set center as goal position
 			goalLocation.x = 0.0;
 			goalLocation.y = 0.0;
