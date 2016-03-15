@@ -22,7 +22,7 @@
 using namespace std;
 
 //Random number generator
-random_numbers::RandomNumberGenerator* rng;	
+//random_numbers::RandomNumberGenerator* rng;	
 
 //Mobility Logic Functions
 void setVelocity(double linearVel, double angularVel);
@@ -36,6 +36,10 @@ float status_publish_interval = 5;
 float killSwitchTimeout = 10;
 std_msgs::Int16 targetDetected; //ID of the detected target
 bool targetsCollected [256] = {0}; //array of booleans indicating whether each target ID has been found
+int mobilityCount = 0; //used t variable in spiral equation
+float prvX = 0.0; //Records location data from tags
+float prvY = 0.0;
+int prvMobilityCount = 0; //Time t when found tag
 
 // state machine states
 #define STATE_MACHINE_TRANSFORM	0
@@ -86,16 +90,17 @@ int main(int argc, char **argv) {
     gethostname(host, sizeof (host));
     string hostname(host);
 
-    rng = new random_numbers::RandomNumberGenerator(); //instantiate random number generator
-    goalLocation.theta = rng->uniformReal(0, 2 * M_PI); //set initial random heading
-    
+    //rng = new random_numbers::RandomNumberGenerator(); //instantiate random number generator
+        
     targetDetected.data = -1; //initialize target detected
     
-    //select initial search position 50 cm from center (0,0)
-	goalLocation.x = 0.5 * cos(goalLocation.theta);
-	goalLocation.y = 0.5 * sin(goalLocation.theta);
+    //Select initial search position based on spiral parametric equation
+	mobilityCount++;
+	goalLocation.x = 0.1* mobilityCount * cos(mobilityCount);
+	goalLocation.y = 0.1* mobilityCount * sin(mobilityCount);
+	goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x);
 
-    if (argc >= 2) {
+    if (argc >= 2){
         publishedName = argv[1];
         cout << "Welcome to the world of tomorrow " << publishedName << "!  Mobility module started." << endl;
     } else {
@@ -126,7 +131,7 @@ int main(int argc, char **argv) {
     stateMachineTimer = mNH.createTimer(ros::Duration(mobilityLoopTimeStep), mobilityStateMachine);
     
     ros::spin();
-    
+
     return EXIT_SUCCESS;
 }
 
@@ -139,7 +144,9 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 			
 			//Select rotation or translation based on required adjustment
 			//If no adjustment needed, select new goal
+			//If returned to previous tag location, assign previous t value for spiral equation
 			case STATE_MACHINE_TRANSFORM: {
+				
 				stateMachineMsg.data = "TRANSFORMING";
 				//If angle between current and goal is significant
 				if (fabs(angles::shortest_angular_distance(currentLocation.theta, goalLocation.theta)) > 0.1) {
@@ -163,17 +170,22 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					//Otherwise, reset target and select new random uniform heading
 					else {
 						targetDetected.data = -1;
-						goalLocation.theta = rng->uniformReal(0, 2 * M_PI);
+						goalLocation.x = prvX;
+						goalLocation.y = prvY;
+						goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x);
 					}
 				}
-				//Otherwise, assign a new goal
+				//Otherwise, continue following spiral parametric equation
 				else {
-					 //select new heading from Gaussian distribution around current heading
-					goalLocation.theta = rng->gaussian(currentLocation.theta, 0.25);
-					
-					//select new position 50 cm from current location
-					goalLocation.x = currentLocation.x + (0.5 * cos(goalLocation.theta));
-					goalLocation.y = currentLocation.y + (0.4 * sin(goalLocation.theta));
+					//If reached previous tag location
+					if (currentLocation.x == prvX && currentLocation.y == prvY)
+					 {
+					    mobilityCount = prvMobilityCount;
+					 }
+					mobilityCount++;
+					goalLocation.x = 0.1* mobilityCount * cos(mobilityCount);
+					goalLocation.y = 0.1* mobilityCount * sin(mobilityCount);
+					goalLocation.theta = atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x);
 				}
 				
 				//Purposefully fall through to next case without breaking
@@ -203,7 +215,7 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 			case STATE_MACHINE_TRANSLATE: {
 				stateMachineMsg.data = "TRANSLATING";
 				if (fabs(angles::shortest_angular_distance(currentLocation.theta, atan2(goalLocation.y - currentLocation.y, goalLocation.x - currentLocation.x))) < M_PI_2) {
-					setVelocity(0.6, 0.0);
+					setVelocity(0.35, 0.0);
 				}
 				else {
 					setVelocity(0.0, 0.0); //stop
@@ -257,7 +269,12 @@ void targetHandler(const std_msgs::Int16::ConstPtr& message) {
         if (!targetsCollected[targetDetected.data]) { 
 	        //set angle to center as goal heading
 			goalLocation.theta = M_PI + atan2(currentLocation.y, currentLocation.x);
-			
+			//Save coordinates and t value to return
+			//after dropping off target in center
+			prvX = currentLocation.x;
+			prvY = currentLocation.y;
+			prvMobilityCount = mobilityCount;
+
 			//set center as goal position
 			goalLocation.x = 0.0;
 			goalLocation.y = 0.0;
