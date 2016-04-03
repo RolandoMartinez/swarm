@@ -1,6 +1,8 @@
 //updated twister w return logic 
 //velocity .8
 //Reverse after obstacle
+//Move around previous target location
+//Rotation .3
 //scaleFactor random number 50 cm to 150 cm
 #include <ros/ros.h>
 
@@ -194,6 +196,9 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					}
 					//Otherwise, reset returningToTarget and select a new uniform heading
 					else {
+						//Moves around returingintoTarget to find cluster or close targets*** - Jorge
+						goalLocation.x = currentLocation.x + (.3 * cos(goalLocation.theta));
+						goalLocation.y = currentLocation.y + (.3 * sin(goalLocation.theta));
 						returningToTarget = false;
 						//Select a new heading from Gaussian distribution around current heading
 						goalLocation.theta = currentLocation.theta + 0.1; //increment 6 degrees
@@ -223,18 +228,18 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 				stateMachineMsg.data = "ROTATING";
 			    	if (angles::shortest_angular_distance(currentLocation.theta, goalLocation.theta) > 0.1) {
 					if (obstacleDetected){
-					    setVelocity(-0.25, 0.2); //rotate left
+					    setVelocity(-0.25, 0.3); //rotate left
 					}
 					else {
-					    setVelocity(0.0, 0.2); //rotate left
+					    setVelocity(0.0, 0.3); //rotate left
 					}
 			    	}
 			    	else if (angles::shortest_angular_distance(currentLocation.theta, goalLocation.theta) < -0.1) {
 					if (obstacleDetected){
-					    setVelocity(-0.25, -0.2); //rotate right
+					    setVelocity(-0.25, -0.3); //rotate right
 					}
 					else{
-					    setVelocity(0.0, -0.2); //rotate right
+					    setVelocity(0.0, -0.3); //rotate right
 					}
 				}
 				else {
