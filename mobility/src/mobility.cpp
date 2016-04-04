@@ -1,8 +1,6 @@
 //updated twister w return logic 
 //velocity .8
 //Reverse after obstacle
-//Move around previous target location
-//Rotation .3
 //scaleFactor random number 50 cm to 150 cm
 #include <ros/ros.h>
 
@@ -180,7 +178,7 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 					//Otherwise, reset target and select new random uniform heading
 					else {
 						targetDetected.data = -1;
-						goalLocation.theta = currentLocation.theta + 0.1; //increment 6 degrees
+						goalLocation.theta = currentLocation.theta - 0.15; //decrement 10 degrees
 						scaleFactor = rng->uniformReal(0.5, 1.5);
 					}
 				}
@@ -191,31 +189,52 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 				        //Set goal to target
 						goalLocation.x = prvX;
 						goalLocation.y = prvY;
+						if ( fabs(currentLocation.x - prvX) < 1.0 && fabs(currentLocation.y - prvY) < 1.0)  
+						{
+						  goalLocation.theta = rng->uniformReal(0, 2 * M_PI);
+						  goalLocation.x = prvX + (0.3 * cos(goalLocation.theta));
+						  goalLocation.y = prvY + (0.3 * sin(goalLocation.theta));
+						}	
 					//set angle to target as goal heading
 						goalLocation.theta = atan2(goalLocation.y - currentLocation.y,goalLocation.x - currentLocation.x);
 					}
 					//Otherwise, reset returningToTarget and select a new uniform heading
 					else {
 						//Moves around returingintoTarget to find cluster or close targets*** - Jorge
-						goalLocation.x = currentLocation.x + (.3 * cos(goalLocation.theta));
-						goalLocation.y = currentLocation.y + (.3 * sin(goalLocation.theta));
+						
 						returningToTarget = false;
 						//Select a new heading from Gaussian distribution around current heading
-						goalLocation.theta = currentLocation.theta + 0.1; //increment 6 degrees
+						goalLocation.theta = currentLocation.theta - 0.15; //decrement 10 degrees
 						scaleFactor = rng->uniformReal(0.5, 1.5);
 						//select new position 50 cm from current location
 						goalLocation.x = currentLocation.x + (scaleFactor * cos(goalLocation.theta));
 						goalLocation.y = currentLocation.y + (scaleFactor * sin(goalLocation.theta));
+						//Override numbers outside of area
+						if ((goalLocation.x > 15.5) || (goalLocation.x < -15.5) || (goalLocation.y > 15.5) || (goalLocation.y < -15.5)){
+						goalLocation.theta = atan2(0.0 - currentLocation.y, 0.0 - currentLocation.x);
+						scaleFactor = rng->uniformReal(0.5, 1.5);
+						//select new position 50 cm from current location
+						goalLocation.x = currentLocation.x + (scaleFactor * cos(goalLocation.theta));
+						goalLocation.y = currentLocation.y + (scaleFactor * sin(goalLocation.theta));
+						}
 					}
 				}
 				//Otherwise, assign a new goal
 				else {
 					 //select new heading from Gaussian distribution around current heading
-					goalLocation.theta = currentLocation.theta +  0.1; //increment 6 degrees
+					goalLocation.theta = currentLocation.theta - 0.15; //decrement 10 degrees
 					scaleFactor = rng->uniformReal(0.5, 1.5);
 					//select new position 50 cm from current location
 					goalLocation.x = currentLocation.x + (scaleFactor * cos(goalLocation.theta));
 					goalLocation.y = currentLocation.y + (scaleFactor * sin(goalLocation.theta));
+					//Override numbers outside of area
+					if ((goalLocation.x > 15.5) || (goalLocation.x < -15.5) || (goalLocation.y > 15.5) || (goalLocation.y < -15.5)){
+						goalLocation.theta = atan2(0.0 - currentLocation.y, 0.0 - currentLocation.x);
+						scaleFactor = rng->uniformReal(0.5, 1.5);
+						//select new position 50 cm from current location
+						goalLocation.x = currentLocation.x + (scaleFactor * cos(goalLocation.theta));
+						goalLocation.y = currentLocation.y + (scaleFactor * sin(goalLocation.theta));
+						}
 				}
 				
 				//Purposefully fall through to next case without breaking
@@ -228,7 +247,8 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 				stateMachineMsg.data = "ROTATING";
 			    	if (angles::shortest_angular_distance(currentLocation.theta, goalLocation.theta) > 0.1) {
 					if (obstacleDetected){
-					    setVelocity(-0.25, 0.3); //rotate left
+					    setVelocity(-0.1, 0.3); //rotate left
+					    obstacleDetected = false; //Try stating this at end of ROTATING state
 					}
 					else {
 					    setVelocity(0.0, 0.3); //rotate left
@@ -236,7 +256,8 @@ void mobilityStateMachine(const ros::TimerEvent&) {
 			    	}
 			    	else if (angles::shortest_angular_distance(currentLocation.theta, goalLocation.theta) < -0.1) {
 					if (obstacleDetected){
-					    setVelocity(-0.25, -0.3); //rotate right
+					    setVelocity(-0.1, -0.3); //rotate right
+					    obstacleDetected = false; //Try stating this at end of ROTATING state
 					}
 					else{
 					    setVelocity(0.0, -0.3); //rotate right
@@ -374,7 +395,6 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
 		
 		//switch to transform state to trigger collision avoidance
 		stateMachineState = STATE_MACHINE_TRANSFORM;
-		obstacleDetected = false;
 	}
 }
 
