@@ -15,7 +15,11 @@
 	</inertia>
 	</inertial>
 
+<<<<<<< HEAD
      <collision name="collision">
+=======
+     <collision name=’collision’>
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
               <geometry>    
           <box>
 	    <size>0.05 23.1 0.33</size>
@@ -39,6 +43,7 @@
 	    <size>0.05 23.1 0.33</size>
           </box>
         </geometry>
+<<<<<<< HEAD
 	<!-->Set the barrier colour to bright orange<!-->
 	<material>
 	  <ambient>255 131 0 1</ambient>
@@ -46,6 +51,8 @@
 	  <specular>0.1 0.1 0.1 1</specular>
 	  <emissive>0 0 0 0</emissive>
 	</material>
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
       </visual>
      </link>
   </model>

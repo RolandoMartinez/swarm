@@ -29,6 +29,7 @@
 #include <sensor_msgs/Joy.h>
 #include <sensor_msgs/Image.h>
 #include <ros/macros.h>
+<<<<<<< HEAD
 #include <rosgraph_msgs/Clock.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Range.h>
@@ -41,16 +42,30 @@
 #include "std_msgs/Float32MultiArray.h"
 #include <geometry_msgs/Polygon.h>
 #include <geometry_msgs/Point32.h>
+=======
+#include <nav_msgs/Odometry.h>
+#include <sensor_msgs/Range.h>
+#include <sensor_msgs/Imu.h>
+#include <std_msgs/Int16.h>
+#include <std_msgs/UInt8.h>
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 #include <pluginlib/class_list_macros.h>
 #include <QGraphicsView>
 #include <QEvent>
 #include <QKeyEvent>
+<<<<<<< HEAD
 #include <QListWidget> // Provides QListWidgetItem
 #include <QProcess>
 #include <map>
 #include <set>
 #include <mutex>
 #include <ublox_msgs/NavSOL.h>
+=======
+#include <QProcess>
+
+#include <map>
+#include <set>
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
 //ROS msg types
 //#include "rover_onboard_target_detection/ATag.h"
@@ -61,6 +76,7 @@
 #include <QLabel>
 
 #include "GazeboSimManager.h"
+<<<<<<< HEAD
 #include "JoystickGripperInterface.h"
 
 
@@ -81,6 +97,23 @@ struct RoverStatus {
 };
 
 
+=======
+
+//AprilTag headers
+#include "apriltag.h"
+#include "tag36h11.h"
+#include "tag36h10.h"
+#include "tag36artoolkit.h"
+#include "tag25h9.h"
+#include "tag25h7.h"
+#include "common/pnm.h"
+#include "common/image_u8.h"
+#include "common/zarray.h"
+#include "common/getopt.h"
+
+using namespace std;
+
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 namespace rqt_rover_gui {
 
   class RoverGUIPlugin : public rqt_gui_cpp::Plugin
@@ -88,41 +121,62 @@ namespace rqt_rover_gui {
     Q_OBJECT
       
   public:
+<<<<<<< HEAD
 
     RoverGUIPlugin();
     ~RoverGUIPlugin();
+=======
+    RoverGUIPlugin();
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     virtual void initPlugin(qt_gui_cpp::PluginContext& context);
     virtual void shutdownPlugin();
     virtual void saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const;
     virtual void restoreSettings(const qt_gui_cpp::Settings& plugin_settings, const qt_gui_cpp::Settings& instance_settings);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     bool eventFilter(QObject *target, QEvent *event);
 
     // Handles output from the joystick node
     QString startROSJoyNode();
     QString stopROSJoyNode();
 
+<<<<<<< HEAD
     void statusEventHandler(const ros::MessageEvent<std_msgs::String const>& event);
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     void joyEventHandler(const sensor_msgs::Joy::ConstPtr& joy_msg);
     void cameraEventHandler(const sensor_msgs::ImageConstPtr& image);
     void EKFEventHandler(const ros::MessageEvent<const nav_msgs::Odometry> &event);
     void GPSEventHandler(const ros::MessageEvent<const nav_msgs::Odometry> &event);
+<<<<<<< HEAD
     void GPSNavSolutionEventHandler(const ros::MessageEvent<const ublox_msgs::NavSOL> &event);
     void encoderEventHandler(const ros::MessageEvent<const nav_msgs::Odometry> &event);
     void obstacleEventHandler(const ros::MessageEvent<std_msgs::UInt8 const> &event);
     void scoreEventHandler(const ros::MessageEvent<std_msgs::String const> &event);
     void simulationTimerEventHandler(const rosgraph_msgs::Clock& msg);
     void diagnosticEventHandler(const ros::MessageEvent<std_msgs::Float32MultiArray const> &event);
+=======
+    void encoderEventHandler(const ros::MessageEvent<const nav_msgs::Odometry> &event);
+    void targetPickUpEventHandler(const ros::MessageEvent<const sensor_msgs::Image> &event);
+    void targetDropOffEventHandler(const ros::MessageEvent<const sensor_msgs::Image> &event);
+    void obstacleEventHandler(const ros::MessageEvent<std_msgs::UInt8 const>& event);
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     void centerUSEventHandler(const sensor_msgs::Range::ConstPtr& msg);
     void leftUSEventHandler(const sensor_msgs::Range::ConstPtr& msg);
     void rightUSEventHandler(const sensor_msgs::Range::ConstPtr& msg);
     void IMUEventHandler(const sensor_msgs::Imu::ConstPtr& msg);
 
+<<<<<<< HEAD
     void infoLogMessageEventHandler(const ros::MessageEvent<std_msgs::String const>& event);
     void diagLogMessageEventHandler(const ros::MessageEvent<std_msgs::String const>& event);
 
 
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     void addModelToGazebo();
     QString addPowerLawTargets();
     QString addUniformTargets();
@@ -138,6 +192,7 @@ namespace rqt_rover_gui {
 
     // Detect rovers that are broadcasting information
     set<string> findConnectedRovers();
+<<<<<<< HEAD
 
   signals:
 
@@ -168,31 +223,62 @@ namespace rqt_rover_gui {
     void receiveDiagsDataUpdate(QString, QString, QColor);
     void receiveInfoLogMessage(QString);
     void receiveDiagLogMessage(QString);
+=======
+    
+    //Image converter
+	image_u8_t *copy_image_data_into_u8_container(int width, int height, uint8_t *rgb, int stride);
+
+	//AprilTag detector
+	int targetDetect(const sensor_msgs::ImageConstPtr& rawImage);
+
+  signals:
+
+    void joystickForwardUpdate(double);
+    void joystickBackUpdate(double);
+    void joystickLeftUpdate(double);
+    void joystickRightUpdate(double);
+    void updateObstacleCallCount(QString text);
+    void updateLog(QString text);
+
+  private slots:
+
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     void currentRoverChangedEventHandler(QListWidgetItem *current, QListWidgetItem *previous);
     void pollRoversTimerEventHandler();
     void GPSCheckboxToggledEventHandler(bool checked);
     void EKFCheckboxToggledEventHandler(bool checked);
     void encoderCheckboxToggledEventHandler(bool checked);
+<<<<<<< HEAD
     void overrideNumRoversCheckboxToggledEventHandler(bool checked);
 
     void mapSelectionListItemChangedHandler(QListWidgetItem* changed_item);
     void mapAutoRadioButtonEventHandler(bool marked);
     void mapManualRadioButtonEventHandler(bool marked);
     void mapPopoutButtonEventHandler();
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     void joystickRadioButtonEventHandler(bool marked);
     void autonomousRadioButtonEventHandler(bool marked);
     void allAutonomousButtonEventHandler();
     void allStopButtonEventHandler();
+<<<<<<< HEAD
     void customWorldButtonEventHandler();
     void customWorldRadioButtonEventHandler(bool marked);
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     void buildSimulationButtonEventHandler();
     void clearSimulationButtonEventHandler();
     void visualizeSimulationButtonEventHandler();
+<<<<<<< HEAD
     void gazeboServerFinishedEventHandler();
     void displayInfoLogMessage(QString msg);
     void displayDiagLogMessage(QString msg);
+=======
+    void gazeboServerFinishedEventHandler();  
+    void displayLogMessage(QString msg);
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     // Needed to refocus the keyboard events when the user clicks on the widget list
     // to the main widget so keyboard manual control is handled properly
@@ -203,6 +289,7 @@ namespace rqt_rover_gui {
     void checkAndRepositionRover(QString rover_name, float x, float y);
     void readRoverModelXML(QString path);
 
+<<<<<<< HEAD
     // ROS Publishers
     map<string,ros::Publisher> control_mode_publishers;
     ros::Publisher joystick_publisher;
@@ -214,10 +301,22 @@ namespace rqt_rover_gui {
     map<string,ros::Subscriber> gps_nav_solution_subscribers;
     map<string,ros::Subscriber> ekf_subscribers;
     map<string,ros::Subscriber> rover_diagnostic_subscribers;
+=======
+    map<string,ros::Publisher> control_mode_publishers;
+    ros::Publisher joystick_publisher;
+    map<string,ros::Publisher> targetPickUpPublisher;
+    map<string,ros::Publisher> targetDropOffPublisher;
+
+    ros::Subscriber joystick_subscriber;
+    map<string,ros::Subscriber> encoder_subscribers;
+    map<string,ros::Subscriber> gps_subscribers;
+    map<string,ros::Subscriber> ekf_subscribers;
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     ros::Subscriber us_center_subscriber;
     ros::Subscriber us_left_subscriber;
     ros::Subscriber us_right_subscriber;
     ros::Subscriber imu_subscriber;
+<<<<<<< HEAD
     ros::Subscriber info_log_subscriber;
     ros::Subscriber diag_log_subscriber;
     ros::Subscriber score_subscriber;
@@ -225,6 +324,12 @@ namespace rqt_rover_gui {
 
     map<string,ros::Subscriber> status_subscribers;
     map<string,ros::Subscriber> obstacle_subscribers;
+=======
+
+    map<string,ros::Subscriber> obstacle_subscribers;
+    map<string,ros::Subscriber> targetDropOffSubscribers;
+    map<string,ros::Subscriber> targetPickUpSubscribers;
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     image_transport::Subscriber camera_subscriber;
 
     string selected_rover_name;
@@ -236,6 +341,7 @@ namespace rqt_rover_gui {
     QProcess* joy_process;
     QTimer* rover_poll_timer; // for rover polling
 
+<<<<<<< HEAD
     QString info_log_messages;
     QString diag_log_messages;
 
@@ -257,6 +363,17 @@ namespace rqt_rover_gui {
     double getHours(double seconds);
     double getMinutes(double seconds);
     double getSeconds(double seconds);
+=======
+    QString log_messages;
+    GazeboSimManager sim_mgr;
+
+    map<string,int> rover_control_state;
+
+    float arena_dim; // in meters
+
+    map<string,int> targetsPickedUp;
+    map<int,bool> targetsDroppedOff;
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     bool display_sim_visualization;
 
@@ -270,6 +387,7 @@ namespace rqt_rover_gui {
     float barrier_clearance;
 
     unsigned long obstacle_call_count;
+<<<<<<< HEAD
 
     // Joystick commands to ROS gripper command interface
     // This is a singleton class. Deleting it while it is still receiving movement commands will cause a segfault.
@@ -286,6 +404,18 @@ namespace rqt_rover_gui {
     size_t max_diag_log_length;
 
     std::mutex diag_update_mutex;
+=======
+    
+    //AprilTag objects
+	apriltag_family_t *tf = NULL; //tag family
+	apriltag_detector_t *td = NULL; //tag detector
+
+	//Image container
+	image_u8_t *u8_image = NULL;
+	
+	//AprilTag assigned to collection zone
+	int collectionZoneID = 256;
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
   };
 } // end namespace
 

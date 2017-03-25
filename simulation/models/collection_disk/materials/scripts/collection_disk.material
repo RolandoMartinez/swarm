@@ -4,12 +4,20 @@ material collection_disk/Diffuse
   {
     pass
     {
+<<<<<<< HEAD
       transparent_sorting off
       alpha_rejection greater_equal 128
 
       texture_unit
       {
         texture collection_disk.png
+=======
+      texture_unit
+      {
+        texture collection_disk.png
+        filtering anistropic
+        max_anisotropy 16
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
       }
     }
   }

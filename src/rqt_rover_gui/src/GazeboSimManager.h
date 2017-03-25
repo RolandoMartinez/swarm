@@ -40,7 +40,10 @@ public:
     QString startRoverNode(QString rover_name);
     QString stopRoverNode(QString rover_name);
     QProcess* startGazeboServer();
+<<<<<<< HEAD
     QProcess* startGazeboServer( QString path );
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     QProcess* startGazeboClient();
     QString stopGazeboServer();
     QString stopGazeboClient();
@@ -54,7 +57,10 @@ public:
     bool isGazeboClientRunning();
     void cleanUpGazeboClient();
     void cleanUpGazeboServer();
+<<<<<<< HEAD
     void setCustomWorldPath(QString path);
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
 private:
     QString app_root; // Path to the application root directory
@@ -66,8 +72,11 @@ private:
     // Contains the positions of objects in the simulation and clearance value (the xy plane radius of the object)
     // center x, center y, clearance
     set< tuple<float, float, float> > model_locations;
+<<<<<<< HEAD
 
     QString custom_world_path;
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 };
 
 #endif // GazeboSimManager_H

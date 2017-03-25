@@ -13,17 +13,24 @@
   <build_depend>rqt_gui_cpp</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>image_transport</build_depend>
+<<<<<<< HEAD
   <build_depend>geometry_msgs</build_depend>
   <build_depend>ublox_serialization</build_depend>
   <build_depend>ublox_msgs</build_depend>
   
+=======
+
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
   <run_depend>rqt_gui</run_depend>
   <run_depend>rqt_gui_cpp</run_depend>
   <run_depend>cv_bridge</run_depend>
   <run_depend>image_transport</run_depend>
+<<<<<<< HEAD
   <run_depend>geometry_msgs</run_depend>
   <run_depend>ublox_serialization</run_depend>
   <run_depend>ublox_msgs</run_depend>
+=======
+>>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   <export>
     <archetecture_independent/>
