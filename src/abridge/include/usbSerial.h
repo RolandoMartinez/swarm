@@ -27,11 +27,7 @@ private:
 
     struct termios ioStruct;
     int usbFileDescriptor;
-<<<<<<< HEAD
     char serialDataIn[200];
-=======
-    char serialDataIn[128];
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     char dataOut[16];
 
 };

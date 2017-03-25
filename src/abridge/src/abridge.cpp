@@ -4,23 +4,15 @@
 #include <tf/transform_datatypes.h>
 
 //ROS messages
-<<<<<<< HEAD
 #include <std_msgs/Float32.h>
 #include <std_msgs/String.h>
 #include <geometry_msgs/Quaternion.h>
 #include <geometry_msgs/QuaternionStamped.h>
-=======
-#include <std_msgs/String.h>
-#include <geometry_msgs/Quaternion.h>
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/Range.h>
-<<<<<<< HEAD
 #include <std_msgs/UInt8.h>
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
 //Package include
 #include <usbSerial.h>
@@ -28,7 +20,6 @@
 using namespace std;
 
 //aBridge functions
-<<<<<<< HEAD
 void driveCommandHandler(const geometry_msgs::Twist::ConstPtr& message);
 void fingerAngleHandler(const std_msgs::Float32::ConstPtr& angle);
 void wristAngleHandler(const std_msgs::Float32::ConstPtr& angle);
@@ -40,14 +31,6 @@ std::string getHumanFriendlyTime();
 //Globals
 geometry_msgs::QuaternionStamped fingerAngle;
 geometry_msgs::QuaternionStamped wristAngle;
-=======
-void cmdHandler(const geometry_msgs::Twist::ConstPtr& message);
-void serialActivityTimer(const ros::TimerEvent& e);
-void publishRosTopics();
-void parseData(string data);
-
-//Globals
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 sensor_msgs::Imu imu;
 nav_msgs::Odometry odom;
 sensor_msgs::Range sonarLeft;
@@ -58,7 +41,6 @@ const int baud = 115200;
 char dataCmd[] = "d\n";
 char moveCmd[16];
 char host[128];
-<<<<<<< HEAD
 const float deltaTime = 0.1; //abridge's update interval
 int currentMode = 0;
 string publishedName;
@@ -84,21 +66,11 @@ ros::Time prevDriveCommandUpdateTime;
 //Publishers
 ros::Publisher fingerAnglePublish;
 ros::Publisher wristAnglePublish;
-=======
-char delimiter = ',';
-vector<string> dataSet;
-float linearSpeed = 0.;
-float turnSpeed = 0.;
-const float deltaTime = 0.1;
-
-//Publishers
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 ros::Publisher imuPublish;
 ros::Publisher odomPublish;
 ros::Publisher sonarLeftPublish;
 ros::Publisher sonarCenterPublish;
 ros::Publisher sonarRightPublish;
-<<<<<<< HEAD
 ros::Publisher infoLogPublisher;
 
 //Subscribers
@@ -106,11 +78,6 @@ ros::Subscriber driveControlSubscriber;
 ros::Subscriber fingerAngleSubscriber;
 ros::Subscriber wristAngleSubscriber;
 ros::Subscriber modeSubscriber;
-=======
-
-//Subscribers
-ros::Subscriber velocitySubscriber;
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
 //Timers
 ros::Timer publishTimer;
@@ -119,20 +86,13 @@ int main(int argc, char **argv) {
     
     gethostname(host, sizeof (host));
     string hostname(host);
-<<<<<<< HEAD
-=======
-    string publishedName;
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     ros::init(argc, argv, (hostname + "_ABRIDGE"));
     
     ros::NodeHandle param("~");
     string devicePath;
     param.param("device", devicePath, string("/dev/ttyUSB0"));
     usb.openUSBPort(devicePath, baud);
-<<<<<<< HEAD
     void modeHandler(const std_msgs::UInt8::ConstPtr& message);
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     
     sleep(5);
     
@@ -146,17 +106,13 @@ int main(int argc, char **argv) {
         cout << "No Name Selected. Default is: " << publishedName << endl;
     }
     
-<<<<<<< HEAD
     fingerAnglePublish = aNH.advertise<geometry_msgs::QuaternionStamped>((publishedName + "/fingerAngle/prev_cmd"), 10);
     wristAnglePublish = aNH.advertise<geometry_msgs::QuaternionStamped>((publishedName + "/wristAngle/prev_cmd"), 10);
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     imuPublish = aNH.advertise<sensor_msgs::Imu>((publishedName + "/imu"), 10);
     odomPublish = aNH.advertise<nav_msgs::Odometry>((publishedName + "/odom"), 10);
     sonarLeftPublish = aNH.advertise<sensor_msgs::Range>((publishedName + "/sonarLeft"), 10);
     sonarCenterPublish = aNH.advertise<sensor_msgs::Range>((publishedName + "/sonarCenter"), 10);
     sonarRightPublish = aNH.advertise<sensor_msgs::Range>((publishedName + "/sonarRight"), 10);
-<<<<<<< HEAD
     infoLogPublisher = aNH.advertise<std_msgs::String>("/infoLog", 1, true);
     
     driveControlSubscriber = aNH.subscribe((publishedName + "/driveControl"), 10, driveCommandHandler);
@@ -164,10 +120,6 @@ int main(int argc, char **argv) {
     wristAngleSubscriber = aNH.subscribe((publishedName + "/wristAngle/cmd"), 1, wristAngleHandler);
     modeSubscriber = aNH.subscribe((publishedName + "/mode"), 1, modeHandler);
 
-=======
-    
-    velocitySubscriber = aNH.subscribe((publishedName + "/velocity"), 10, cmdHandler);
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     
     publishTimer = aNH.createTimer(ros::Duration(deltaTime), serialActivityTimer);
     
@@ -175,7 +127,6 @@ int main(int argc, char **argv) {
     
     odom.header.frame_id = publishedName+"/odom";
     odom.child_frame_id = publishedName+"/base_link";
-<<<<<<< HEAD
 
     for (int i = 0; i < histArrayLength; i++)
     {
@@ -185,15 +136,11 @@ int main(int argc, char **argv) {
     
     prevDriveCommandUpdateTime = ros::Time::now();
 
-=======
-    
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     ros::spin();
     
     return EXIT_SUCCESS;
 }
 
-<<<<<<< HEAD
 //This command handler recives a linear velocity setpoint and a angular yaw error
 //and produces a command output for the left and right motors of the robot.
 //See the following paper for description of PID controllers.
@@ -491,25 +438,6 @@ void wristAngleHandler(const std_msgs::Float32::ConstPtr& angle) {
   }
   usb.sendData(cmd);
   memset(&cmd, '\0', sizeof (cmd));
-=======
-void cmdHandler(const geometry_msgs::Twist::ConstPtr& message) {
-    // remove artificial factor that was multiplied for simulation. this scales it back down to -1.0 to +1.0
-    linearSpeed = (message->linear.x) / 1.5;
-    turnSpeed = (message->angular.z) / 8;
-    
-    if (linearSpeed != 0.) {
-        sprintf(moveCmd, "m,%d\n", (int) (linearSpeed * 255));
-        usb.sendData(moveCmd);
-    } else if (turnSpeed != 0.) {
-        sprintf(moveCmd, "t,%d\n", (int) (turnSpeed * 255));
-        usb.sendData(moveCmd);
-    } else {
-        sprintf(moveCmd, "s\n");
-        usb.sendData(moveCmd);
-    }
-    
-    memset(&moveCmd, '\0', sizeof (moveCmd));
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 }
 
 void serialActivityTimer(const ros::TimerEvent& e) {
@@ -519,11 +447,8 @@ void serialActivityTimer(const ros::TimerEvent& e) {
 }
 
 void publishRosTopics() {
-<<<<<<< HEAD
     fingerAnglePublish.publish(fingerAngle);
     wristAnglePublish.publish(wristAngle);
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
     imuPublish.publish(imu);
     odomPublish.publish(odom);
     sonarLeftPublish.publish(sonarLeft);
@@ -533,7 +458,6 @@ void publishRosTopics() {
 
 void parseData(string str) {
     istringstream oss(str);
-<<<<<<< HEAD
     string sentence;
     
     while (getline(oss, sentence, '\n')) {
@@ -596,35 +520,4 @@ void parseData(string str) {
 
 void modeHandler(const std_msgs::UInt8::ConstPtr& message) {
 	currentMode = message->data;
-=======
-    string word;
-    while (getline(oss, word, delimiter)) {
-        dataSet.push_back(word);
-    }
-    if (dataSet.size() == 18) {
-        imu.header.stamp = ros::Time::now();
-        imu.linear_acceleration.x = atof(dataSet.at(0).c_str());
-        imu.linear_acceleration.y = atof(dataSet.at(1).c_str());
-        imu.linear_acceleration.z = atof(dataSet.at(2).c_str());
-        imu.angular_velocity.x = atof(dataSet.at(3).c_str());
-        imu.angular_velocity.y = atof(dataSet.at(4).c_str());
-        imu.angular_velocity.z = atof(dataSet.at(5).c_str());
-        imu.orientation = tf::createQuaternionMsgFromRollPitchYaw(atof(dataSet.at(6).c_str()), atof(dataSet.at(7).c_str()), atof(dataSet.at(8).c_str()));
-        
-        odom.header.stamp = ros::Time::now();
-        odom.pose.pose.position.x += atof(dataSet.at(9).c_str()) / 100.0;
-        odom.pose.pose.position.y += atof(dataSet.at(10).c_str()) / 100.0;
-        odom.pose.pose.position.z = 0.0;
-        odom.pose.pose.orientation = tf::createQuaternionMsgFromYaw(atof(dataSet.at(11).c_str()));
-        odom.twist.twist.linear.x = atof(dataSet.at(12).c_str()) / 100.0;
-        odom.twist.twist.linear.y = atof(dataSet.at(13).c_str()) / 100.0;
-        odom.twist.twist.angular.z = atof(dataSet.at(14).c_str());
-        
-        sonarLeft.range = atof(dataSet.at(15).c_str()) / 100.0;
-        sonarCenter.range = atof(dataSet.at(16).c_str()) / 100.0;
-        sonarRight.range = atof(dataSet.at(17).c_str()) / 100.0;
-    }
-    
-    dataSet.clear();
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 }

@@ -14,27 +14,15 @@
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>random_numbers</build_depend>
-<<<<<<< HEAD
   <build_depend>tf</build_depend>
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   <run_depend>geometry_msgs</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>random_numbers</run_depend>
-<<<<<<< HEAD
   <run_depend>tf</run_depend>
 
-=======
-
-  <build_depend>message_generation</build_depend>
-  <run_depend>message_runtime</run_depend> 
-  <build_depend>shared_messages</build_depend>
-  <run_depend>shared_messages</run_depend> 
- 
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
   <export>
 
   </export>

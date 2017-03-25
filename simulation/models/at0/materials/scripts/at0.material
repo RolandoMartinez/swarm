@@ -4,7 +4,6 @@ material at0/Diffuse
   {
     pass
     {
-<<<<<<< HEAD
       transparent_sorting on
 
       texture_unit
@@ -14,14 +13,3 @@ material at0/Diffuse
     }
   }
 }
-=======
-      texture_unit
-      {
-        texture atag-0.png
-        filtering anistropic
-        max_anisotropy 16
-      }
-    }
-  }
-}
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea

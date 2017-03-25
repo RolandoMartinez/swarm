@@ -8,17 +8,12 @@ This repository contains:
 2. 3D .STL models for the physical Swarmie build 
 3. Bash shell scripts for initializing simulated Swarmies in the Gazebo simulator, as well as physical Swarmies
 
-<<<<<<< HEAD
 - For a step-by-step guide to using Swarmathon-ROS to control a physical Swarmie robot, please see the instructions in the physical robot [Quick Start Guide](https://github.com/BCLab-UNM/Swarmathon-Docs/blob/master/Quick%20Start%20Physical%20Guide.md).
 
 - Please submit bug reports for Swarmathon-ROS through GitHub's Issues system. For all other questions regarding the Swarmathon-ROS code base, please visit the forums on the [NASA Swarmathon website](http://www.nasaswarmathon.com).
 
 - We recommend Jason M. O'Kane's [A Gentle Introduction to ROS](https://cse.sc.edu/~jokane/agitr/) for an in-depth walkthrough.
 
-=======
-- Please submit bug reports for Swarmathon-ROS through GitHub's Issues system. For all other questions regarding the Swarmathon-ROS code base, please visit the forums on the [NASA Swarmathon website](http://www.nasaswarmathon.com).
-
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 - Please consult the [git scm](https://git-scm.com/) and [git best practices](https://sethrobertson.github.io/GitBestPractices/) for guidelines on the most effective approaches to maintaining code. Teams will be expected to commit new code at least every two weeks, and ideally commit one or more times per week. Consult the [NASA Swarmathon Timeline](http://www.nasaswarmathon.com) for specifics on how often code should be committed, as well as the cutoff date for final code revision before the competition.
 
 ### Quick Start Installation Guide
@@ -31,22 +26,18 @@ Follow the detailed instructions for installing ROS Indigo under Ubuntu 14.04 [h
 
 ##### 2. Install additional ROS plugins
 
-<<<<<<< HEAD
 We use the [catkin_tools](https://catkin-tools.readthedocs.io/) package to build the Swarmathon-ROS code base:
 
 ```
 sudo apt-get install python-catkin-tools
 ```
 
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 Our simulated and physical Swarmies use existing ROS plugins, external to this repo, to facilitate non-linear state estimation through sensor fusion and frame transforms. These plugins are contained in the [robot_localization](http://wiki.ros.org/robot_localization) package, which should be installed using the apt-get package management tool:
 
 ```
 sudo apt-get install ros-indigo-robot-localization
 ```
 
-<<<<<<< HEAD
 We additionally make use of an AprilTag detection plugin to decode tags within images, as well as provide pose estimates for tag positions relative to the lens of the camera. This plugin is contained in the [apriltags_ros](http://wiki.ros.org/apriltags_ros) package, which should be installed using apt-get:
 
 ```
@@ -59,8 +50,6 @@ Finally, our physical Swarmies use a USB camera driver, contained in the [usb_ca
 sudo apt-get install ros-indigo-usb-cam
 ```
 
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 ##### 3. Install additional Gazebo plugins
 
 Our simulated Swarmies use existing Gazebo plugins, external to this repo, to replicate sonar, IMU, and GPS sensors. These plugins are contained in the [hector_gazebo_plugins](http://wiki.ros.org/hector_gazebo_plugins) package, which should be installed using the apt-get package management tool:
@@ -85,7 +74,6 @@ sudo apt-get install git
 
 ##### 5. Install Swarmathon-ROS
 
-<<<<<<< HEAD
 1. Clone this GitHub repository to your home directory (~), renaming the repo so ROS and catkin can properly identify it:
 
   ```
@@ -94,43 +82,19 @@ sudo apt-get install git
   ```
 
 2. Change your current working directory to the root directory of the downloaded repo:
-=======
-1. Clone this GitHub repository to your home directory (~):
-
-  ```
-  cd ~
-  git clone https://github.com/BCLab-UNM/Swarmathon-ROS.git
-  ```
-
-2. Rename the downloaded repo so it can be properly identified by ROS and catkin:
-
-  ```
-  mv ~/Swarmathon-ROS ~/rover_workspace
-  ```
-
-3. Change your current working directory to the root directory of the downloaded repo:
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   ```
   cd ~/rover_workspace
   ```
 
-<<<<<<< HEAD
 3. Set up [ublox](http://wiki.ros.org/ublox) GPS submodule:
-=======
-4. Set up [ublox](http://wiki.ros.org/ublox) GPS submodule:
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   ```
   git submodule init
   git submodule update
   ```
 
-<<<<<<< HEAD
 4. Compile Swarmathon-ROS as a ROS catkin workspace:
-=======
-5. Compile Swarmathon-ROS as a ROS catkin workspace:
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
  
   Make sure bash is aware of the location of the ROS environment:
   ```
@@ -141,7 +105,6 @@ sudo apt-get install git
   source ~/.bashrc
   ```
   
-<<<<<<< HEAD
   Tell catkin to build the Swarmathon code:
   
   ```
@@ -149,26 +112,13 @@ sudo apt-get install git
   ```
   
 5. Update your bash session to automatically source the setup file for Swarmathon-ROS:
-=======
-  Run catkin_make to build the Swarmathon code:
-  
-  ```
-  catkin_make
-  ```
-  
-6. Update your bash session to automatically source the setup file for Swarmathon-ROS:
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   ```
   echo "source ~/rover_workspace/devel/setup.bash" >> ~/.bashrc
   source ~/.bashrc
   ```
 
-<<<<<<< HEAD
 6. Update your bash session to automatically export the enviromental variable that stores the location of Gazebo's model files:
-=======
-7. Update your bash session to automatically export the enviromental variable that stores the location of Gazebo's model files:
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
   ```
   echo "export GAZEBO_MODEL_PATH=~/rover_workspace/simulation/models" >> ~/.bashrc
@@ -259,19 +209,11 @@ Source code for Swarmathon-ROS can be found in the ```~/rover_workspace/src``` d
 
   ```
   sudo apt-get install qtcreator
-<<<<<<< HEAD
-=======
-  sudo apt-get install python-catkin-tools
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
   ```
   
 2. Build the workspace:
 
   ```
-<<<<<<< HEAD
-=======
-  catkin clean -a
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
   catkin build
   ```
 

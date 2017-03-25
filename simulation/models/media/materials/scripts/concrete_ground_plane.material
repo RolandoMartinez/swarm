@@ -10,11 +10,7 @@ material ConcreteGroundPlane/Image
 
           texture_unit
           {
-<<<<<<< HEAD
             texture concreteTile.jpg
-=======
-            texture concrete.jpg
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
             filtering trilinear
 	    scale 0.01 0.01
           }

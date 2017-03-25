@@ -3,11 +3,7 @@
     <description>The Rover GUI</description>
     <qtgui>
       <label>Rover GUI</label>
-<<<<<<< HEAD
       <icon type="file">resources/swarmathon-gui-icon.png</icon>
-=======
-      <icon type="theme"></icon>
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
       <statustip>Rover GUI</statustip>
     </qtgui>
   </class>

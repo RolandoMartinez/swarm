@@ -1,6 +1,5 @@
 <?xml version='1.0'?>
 <sdf version='1.4'>
-<<<<<<< HEAD
 	<model name="collection_disk">
 		<static>true</static>
 		<link name="link">
@@ -52,45 +51,4 @@
 			<updateRate>0.2</updateRate>
 		</plugin>
 	</model>
-=======
-    <model name="collection_disk">
-        <static>true</static>
-    <link name="link">
-      <inertial>
-	<mass>1.0</mass>
-	<inertia>
-	  <ixx>0.083</ixx>
-	  <ixy>0</ixy>
-	  <ixz>0</ixz>
-	  <iyy>0</iyy>
-	  <iyz>0</iyz>
-	  <izz>0.083</izz>
-	</inertia>
-	</inertial>
-
-            <collision name ='collision'>
-                <geometry>
-                    <box>
-                        <size>1.0 1.0 .001</size>
-                    </box>
-                </geometry>
-            </collision>
-            <visual name='visual'>
-		<transparency>0.1</transparency>
-                <geometry>
-                    <box>
-                        <size>1.0 1.0 .001</size>
-                    </box>
-                </geometry>
-                <material>
-                    <script>
-                        <uri>model://collection_disk/materials/scripts</uri>
-                        <uri>model://collection_disk/materials/textures</uri>
-                        <name>collection_disk/Diffuse</name>
-                    </script>
-                </material>
-            </visual>
-        </link>     
-    </model>
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 </sdf>

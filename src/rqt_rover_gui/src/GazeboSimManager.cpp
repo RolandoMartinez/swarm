@@ -18,7 +18,6 @@ GazeboSimManager::GazeboSimManager()
     char *app_root_cstr;
     app_root_cstr = getenv(name);
     app_root = QString(app_root_cstr);
-<<<<<<< HEAD
     custom_world_path = "";
 }
 
@@ -50,17 +49,6 @@ QProcess* GazeboSimManager::startGazeboServer( QString path )
     gazebo_server_process = new QProcess();
 
     QString command = QString("rosrun gazebo_ros gzserver ") + path;
-=======
-}
-
-QProcess* GazeboSimManager::startGazeboServer()
-{
-    if (gazebo_server_process != NULL) return gazebo_server_process;
-
-    gazebo_server_process = new QProcess();
-
-    QString command = QString("rosrun gazebo_ros gzserver ") + app_root + "/simulation/worlds/swarmathon.world";
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     gazebo_server_process->startDetached(command);
 
@@ -150,7 +138,6 @@ QString GazeboSimManager::stopRoverNode( QString rover_name )
     rover_processes[rover_name]->waitForFinished();
     rover_processes.erase(rover_name);
 
-<<<<<<< HEAD
     // Names of the nodes to kill. 
     vector<QString> nodes;
     nodes.push_back("APRILTAG");
@@ -174,50 +161,11 @@ QString GazeboSimManager::stopRoverNode( QString rover_name )
     }
 
     return output;
-=======
-    // Kill nodes
-    QString argument = "rosnode kill "+rover_name+"_MOBILITY";
-    QProcess sh;
-    sh.start("sh", QStringList() << "-c" << argument);
-    sh.waitForFinished();
-    QString output = sh.readAll();
-    sh.close();
-
-    argument = "rosnode kill "+rover_name+"_NAVSAT";
-    sh.start("sh", QStringList() << "-c" << argument);
-    sh.waitForFinished();
-    output += "<br>" + sh.readAll();
-    sh.close();
-
-    argument = "rosnode kill "+rover_name+"_TARGET";
-    sh.start("sh", QStringList() << "-c" << argument);
-    sh.waitForFinished();
-    output += "<br>" + sh.readAll();
-    sh.close();
-
-    argument = "rosnode kill "+rover_name+"_OBSTACLE";
-    sh.start("sh", QStringList() << "-c" << argument);
-    sh.waitForFinished();
-    output += "<br>" + sh.readAll();
-    sh.close();
-
-    argument = "rosnode kill "+rover_name+"_EKF";
-    sh.start("sh", QStringList() << "-c" << argument);
-    sh.waitForFinished();
-    output += "<br>" + sh.readAll();
-    sh.close();
-
-    return output+"<br>rover process " + rover_name + " terminated along with <font color='green'>navsat, target, obstacle, and mobility</font> nodes";
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 }
 
 QString GazeboSimManager::startRoverNode( QString rover_name )
 {
-<<<<<<< HEAD
     QString argument = "roslaunch "+app_root+"/launch/swarmie.launch name:="+rover_name;
-=======
-    QString argument = "roslaunch "+app_root+"/launch/"+rover_name+".launch name:="+rover_name;
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 
     QProcess* rover_process = new QProcess();
 
@@ -252,11 +200,7 @@ QString GazeboSimManager::addRover(QString rover_name, float x, float y, float z
                + "-model " + rover_name
                + " -x " + QString::number(x)
                + " -y " + QString::number(y)
-<<<<<<< HEAD
                + " -z " + QString::number(z)
-=======
-               + " -z " + QString::number(z);
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
                + " -Y " + QString::number(M_PI);
 
     QProcess sh;
@@ -424,14 +368,11 @@ bool GazeboSimManager::isGazeboClientRunning()
     return gazebo_server_process != NULL;
 }
 
-<<<<<<< HEAD
 void GazeboSimManager::setCustomWorldPath(QString path)
 {
     custom_world_path = path;
 }
 
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 GazeboSimManager::~GazeboSimManager()
 {
     stopGazeboServer();
@@ -444,8 +385,5 @@ GazeboSimManager::~GazeboSimManager()
     delete command_process;
 }
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea

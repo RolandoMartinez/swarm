@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <sdf version="1.4">
-<<<<<<< HEAD
 	<world name="default">
 		<include>
 			<uri>model://ground_plane</uri>
@@ -12,17 +11,4 @@
 
 		<plugin name="SetupWorld" filename="libgazebo_plugins.so"/>
 	</world>
-=======
-  <world name="default">
-    <include>
-      <uri>model://ground_plane</uri>
-    </include>
-
-    <include>
-      <uri>model://sun</uri>
-    </include>
-
-    <plugin name="SetupWorld" filename="libgazebo_plugins.so"/>
-  </world>
->>>>>>> 5e1b6536af46e99b611ef960ac01a8f0043e35ea
 </sdf>
