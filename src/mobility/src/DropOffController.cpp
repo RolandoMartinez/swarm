@@ -4,7 +4,7 @@ DropOffController::DropOffController() {
     cameraOffsetCorrection = 0.020; //meters
     centeringTurn = 0.15; //radians
     seenEnoughCenterTagsCount = 10;
-    collectionPointVisualDistance = 0.5; //in meters
+    collectionPointVisualDistance = 0.55; //in meters 0.5 original - Abe
     reachedCollectionPoint = false;
     spinSize = 0.10; //in meters aka 10cm 
     addSpinSizeAmmount = 0.10; //in meters
@@ -31,7 +31,7 @@ DropOffController::DropOffController() {
     circularCenterSearching = false;
     prevCount = 0;
 
-    searchVelocity = 0.15;
+    searchVelocity = 0.15; // original is 0.15 - Abe
 }
 
 
@@ -64,7 +64,7 @@ void DropOffController::calculateDecision() {
             angle= 0;
             result.wristAngle = angle; //raise wrist
 
-            result.cmdVel = -0.3;
+            result.cmdVel = -0.4;//original is 0.3 - abe
             result.angleError = 0.0;
         }
         return;
@@ -89,7 +89,7 @@ void DropOffController::calculateDecision() {
         result.centerGoal.y = centerLocation.y + (spinSize + addSpinSize) * sin(spinner);
         result.centerGoal.theta = atan2(result.centerGoal.y - currentLocation.y, result.centerGoal.x - currentLocation.x);
 
-        spinner += 45*(M_PI/180); //add 45 degrees in radians to spinner.
+        spinner += 180 *(M_PI/180); //add 45 degrees in radians to spinner. - changed to 90 - Abe
         if (spinner > 2*M_PI)
         {
             spinner -= 2*M_PI;
@@ -112,11 +112,11 @@ void DropOffController::calculateDecision() {
 
         if (seenEnoughCenterTags) //if we have seen enough tags
         {
-            if ((countLeft-5) > countRight) //and there are too many on the left
+            if ((countLeft-6) > countRight) //and there are too many on the left original is 5 - Abe
             {
                 right = false; //then we say non on the right to cause us to turn right
             }
-            else if ((countRight-5) > countLeft)
+            else if ((countRight-6) > countLeft)//original is 5 - Abe
             {
                 left = false; //or left in this case
             }
@@ -134,11 +134,11 @@ void DropOffController::calculateDecision() {
             result.angleError = 0.0;
         }
         else if (right) {
-            result.cmdVel = -0.1 * turnDirection;
+            result.cmdVel = -0.15 * turnDirection;//original is 0.1 - Abe
             result.angleError = -centeringTurn*turnDirection;
         }
         else if (left){
-            result.cmdVel = -0.1 * turnDirection;
+            result.cmdVel = -0.15 * turnDirection;//original is 0.1 - Abe
             result.angleError = centeringTurn*turnDirection;
         }
         else

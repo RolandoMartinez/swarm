@@ -97,7 +97,7 @@ geometry_msgs::Pose2D mapLocation[mapHistorySize];
 
 bool avoidingObstacle = false;
 
-float searchVelocity = 0.2; // meters/second
+float searchVelocity = 0.2; // meters/second original is 0.2 - Abe
 
 std_msgs::String msg;
 
@@ -333,7 +333,9 @@ void mobilityStateMachine(const ros::TimerEvent&) {
                     targetCollected = false;
                     targetDetected = false;
                     lockTarget = false;
-                    sendDriveCommand(0.0,0);
+                    sendDriveCommand(-0.2,0);//Added by Abe
+		    sendDriveCommand(0.0,0);
+		    
 
                     // move back to transform step
                     stateMachineState = STATE_MACHINE_TRANSFORM;
@@ -466,7 +468,7 @@ void mobilityStateMachine(const ros::TimerEvent&) {
                     goalLocation.theta = atan2(centerLocationOdom.y - currentLocation.y, centerLocationOdom.x - currentLocation.x);
 
                     // set center as goal position
-                    goalLocation.x = centerLocationOdom.x = 0;
+                    goalLocation.x = centerLocationOdom.x;
                     goalLocation.y = centerLocationOdom.y;
 
                     // lower wrist to avoid ultrasound sensors
@@ -563,7 +565,7 @@ void targetHandler(const apriltags_ros::AprilTagDetectionArray::ConstPtr& messag
         // if we see the center and we dont have a target collected
         if (centerSeen && !targetCollected) {
 
-            float centeringTurn = 0.15; //radians
+            float centeringTurn = 0.2; //radians original is 0.15 - Abe
             stateMachineState = STATE_MACHINE_TRANSFORM;
 
             // this code keeps the robot from driving over
@@ -623,14 +625,14 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
     if ((!targetDetected || targetCollected) && (message->data > 0)) {
         // obstacle on right side
         if (message->data == 1) {
-            // select new heading 0.2 radians to the left
-            goalLocation.theta = currentLocation.theta + 0.6;
+            // select new heading original 0.2 radians to the left now is 0.15 radians - Abe
+            goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
         }
 
         // obstacle in front or on left side
         else if (message->data == 2) {
             // select new heading 0.2 radians to the right
-            goalLocation.theta = currentLocation.theta + 0.6;
+            goalLocation.theta = currentLocation.theta - 0.45; // original is + 0.6 - Abe
         }
 
         // continues an interrupted search
@@ -642,7 +644,7 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
         avoidingObstacle = true;
     }
 
-    // the front ultrasond is blocked very closely. 0.14m currently
+    // the front ultrasond is blocked very closely. 0.12m currently // now running at 0.1 - Abe
     if (message->data == 4) {
         blockBlock = true;
     } else {

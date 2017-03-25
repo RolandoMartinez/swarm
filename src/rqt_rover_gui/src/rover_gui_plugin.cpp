@@ -1884,7 +1884,7 @@ QString RoverGUIPlugin::stopROSJoyNode()
 QString RoverGUIPlugin::addUniformTargets()
 {
     QProgressDialog progress_dialog;
-    progress_dialog.setWindowTitle("Placing 256 Targets");
+    progress_dialog.setWindowTitle("Placing 256 Targets"); //256 original value
     progress_dialog.setCancelButton(NULL); // no cancel button
     progress_dialog.setWindowModality(Qt::ApplicationModal);
     progress_dialog.resize(500, 50);
