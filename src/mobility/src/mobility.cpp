@@ -63,7 +63,6 @@ float status_publish_interval = 1;
 float killSwitchTimeout = 10;
 bool targetDetected = false;
 bool targetCollected = false;
-float heartbeat_publish_interval = 2;
 
 // Set true when the target block is less than targetDist so we continue
 // attempting to pick it up rather than switching to another block in view.
@@ -98,7 +97,7 @@ geometry_msgs::Pose2D mapLocation[mapHistorySize];
 
 bool avoidingObstacle = false;
 
-float searchVelocity = 0.2; // meters/second
+float searchVelocity = 0.2; // meters/second original is 0.2 - Abe
 
 std_msgs::String msg;
 
@@ -123,7 +122,6 @@ ros::Publisher fingerAnglePublish;
 ros::Publisher wristAnglePublish;
 ros::Publisher infoLogPublisher;
 ros::Publisher driveControlPublish;
-ros::Publisher heartbeatPublisher;
 
 // Subscribers
 ros::Subscriber joySubscriber;
@@ -138,7 +136,6 @@ ros::Subscriber mapSubscriber;
 ros::Timer stateMachineTimer;
 ros::Timer publish_status_timer;
 ros::Timer targetDetectedTimer;
-ros::Timer publish_heartbeat_timer;
 
 // records time for delays in sequanced actions, 1 second resolution.
 time_t timerStartTime;
@@ -164,7 +161,6 @@ void mapHandler(const nav_msgs::Odometry::ConstPtr& message);
 void mobilityStateMachine(const ros::TimerEvent&);
 void publishStatusTimerEventHandler(const ros::TimerEvent& event);
 void targetDetectedReset(const ros::TimerEvent& event);
-void publishHeartBeatTimerEventHandler(const ros::TimerEvent& event);
 
 int main(int argc, char **argv) {
 
@@ -221,13 +217,10 @@ int main(int argc, char **argv) {
     wristAnglePublish = mNH.advertise<std_msgs::Float32>((publishedName + "/wristAngle/cmd"), 1, true);
     infoLogPublisher = mNH.advertise<std_msgs::String>("/infoLog", 1, true);
     driveControlPublish = mNH.advertise<geometry_msgs::Twist>((publishedName + "/driveControl"), 10);
-    heartbeatPublisher = mNH.advertise<std_msgs::String>((publishedName + "/mobility/heartbeat"), 1, true);
 
     publish_status_timer = mNH.createTimer(ros::Duration(status_publish_interval), publishStatusTimerEventHandler);
     stateMachineTimer = mNH.createTimer(ros::Duration(mobilityLoopTimeStep), mobilityStateMachine);
     targetDetectedTimer = mNH.createTimer(ros::Duration(0), targetDetectedReset, true);
-
-    publish_heartbeat_timer = mNH.createTimer(ros::Duration(heartbeat_publish_interval), publishHeartBeatTimerEventHandler);
 
     tfListener = new tf::TransformListener();
     std_msgs::String msg;
@@ -340,7 +333,8 @@ void mobilityStateMachine(const ros::TimerEvent&) {
                     targetCollected = false;
                     targetDetected = false;
                     lockTarget = false;
-                    sendDriveCommand(0.0,0);
+		    sendDriveCommand(0.0,0);
+		    
 
                     // move back to transform step
                     stateMachineState = STATE_MACHINE_TRANSFORM;
@@ -570,7 +564,7 @@ void targetHandler(const apriltags_ros::AprilTagDetectionArray::ConstPtr& messag
         // if we see the center and we dont have a target collected
         if (centerSeen && !targetCollected) {
 
-            float centeringTurn = 0.15; //radians
+            float centeringTurn = 0.15; //radians original is 0.15 - Abe
             stateMachineState = STATE_MACHINE_TRANSFORM;
 
             // this code keeps the robot from driving over
@@ -578,10 +572,19 @@ void targetHandler(const apriltags_ros::AprilTagDetectionArray::ConstPtr& messag
             if (right) {
                 // turn away from the center to the left if just driving
                 // around/searching.
+		centerLocationOdom.x = currentLocation.x;// added - abe
+	  	centerLocationOdom.y = currentLocation.y;// added - abe
+	 	centerLocationOdom.theta = currentLocation.theta - 0.175;// added - abe
+
+		sendDriveCommand(-0.1,0.0);//added -abe
                 goalLocation.theta += centeringTurn;
             } else {
                 // turn away from the center to the right if just driving
                 // around/searching.
+		centerLocationOdom.x = currentLocation.x;// added - abe
+	  	centerLocationOdom.y = currentLocation.y;// added - abe
+	 	centerLocationOdom.theta = currentLocation.theta + 0.175;// added - abe
+		sendDriveCommand(-0.1,0.0);//added -abe
                 goalLocation.theta -= centeringTurn;
             }
 
@@ -630,14 +633,16 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
     if ((!targetDetected || targetCollected) && (message->data > 0)) {
         // obstacle on right side
         if (message->data == 1) {
-            // select new heading 0.2 radians to the left
-            goalLocation.theta = currentLocation.theta + 0.6;
+            // select new heading original 0.2 radians to the left now is 0.15 radians - Abe
+	sendDriveCommand(-0.1,0); //added - abe            
+	goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
         }
 
         // obstacle in front or on left side
         else if (message->data == 2) {
             // select new heading 0.2 radians to the right
-            goalLocation.theta = currentLocation.theta + 0.6;
+	    sendDriveCommand(-0.1,0); //added - abe 
+            goalLocation.theta = currentLocation.theta - 0.45; // original is + 0.6 - Abe
         }
 
         // continues an interrupted search
@@ -649,7 +654,7 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
         avoidingObstacle = true;
     }
 
-    // the front ultrasond is blocked very closely. 0.14m currently
+    // the front ultrasond is blocked very closely. 0.12m currently // now running at 0.1 - Abe
     if (message->data == 4) {
         blockBlock = true;
     } else {
@@ -784,8 +789,3 @@ void mapAverage() {
     }
 }
 
-void publishHeartBeatTimerEventHandler(const ros::TimerEvent&) {
-    std_msgs::String msg;
-    msg.data = "";
-    heartbeatPublisher.publish(msg);
-}

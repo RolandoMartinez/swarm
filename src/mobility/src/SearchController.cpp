@@ -11,11 +11,10 @@ geometry_msgs::Pose2D SearchController::search(geometry_msgs::Pose2D currentLoca
   geometry_msgs::Pose2D goalLocation;
 
   //select new heading from Gaussian distribution around current heading
-  goalLocation.theta = rng->gaussian(currentLocation.theta, 0.25);
+  goalLocation.theta = currentLocation.theta + rng->gaussian(0.14, 0.21) ;// original rng->gaussian(currentLocation.theta, 0.25); - Abe
+  goalLocation.x = currentLocation.x + (0.4 * cos(goalLocation.theta));//0.5 original Abe
+  goalLocation.y = currentLocation.y + (0.4 * sin(goalLocation.theta));//0.5 original Abe
 
-  //select new position 50 cm from current location
-  goalLocation.x = currentLocation.x + (0.5 * cos(goalLocation.theta));
-  goalLocation.y = currentLocation.y + (0.5 * sin(goalLocation.theta));
 
   return goalLocation;
 }
