@@ -333,6 +333,13 @@ void mobilityStateMachine(const ros::TimerEvent&) {
                     targetCollected = false;
                     targetDetected = false;
                     lockTarget = false;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+                    sendDriveCommand(-0.2,0);//Added by Abe
+>>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
+>>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
 		    sendDriveCommand(0.0,0);
 		    
 
@@ -564,7 +571,15 @@ void targetHandler(const apriltags_ros::AprilTagDetectionArray::ConstPtr& messag
         // if we see the center and we dont have a target collected
         if (centerSeen && !targetCollected) {
 
+<<<<<<< HEAD
             float centeringTurn = 0.15; //radians original is 0.15 - Abe
+=======
+<<<<<<< HEAD
+            float centeringTurn = 0.15; //radians original is 0.15 - Abe
+=======
+            float centeringTurn = 0.2; //radians original is 0.15 - Abe
+>>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
+>>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
             stateMachineState = STATE_MACHINE_TRANSFORM;
 
             // this code keeps the robot from driving over
@@ -634,14 +649,30 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
         // obstacle on right side
         if (message->data == 1) {
             // select new heading original 0.2 radians to the left now is 0.15 radians - Abe
+<<<<<<< HEAD
 	sendDriveCommand(-0.1,0); //added - abe            
 	goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
+=======
+<<<<<<< HEAD
+	sendDriveCommand(-0.1,0); //added - abe            
+	goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
+=======
+            goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
+>>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
+>>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
         }
 
         // obstacle in front or on left side
         else if (message->data == 2) {
             // select new heading 0.2 radians to the right
+<<<<<<< HEAD
 	    sendDriveCommand(-0.1,0); //added - abe 
+=======
+<<<<<<< HEAD
+	    sendDriveCommand(-0.1,0); //added - abe 
+=======
+>>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
+>>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
             goalLocation.theta = currentLocation.theta - 0.45; // original is + 0.6 - Abe
         }
 
