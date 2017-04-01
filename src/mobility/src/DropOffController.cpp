@@ -1,5 +1,5 @@
 #include "DropOffController.h"
-
+//TAMIU Swarmathon 2017 Final Code 03/31/2017
 DropOffController::DropOffController() {
     cameraOffsetCorrection = 0.020; //meters
     centeringTurn = 0.3; //radians
@@ -64,15 +64,7 @@ void DropOffController::calculateDecision() {
             angle= 0;
             result.wristAngle = angle; //raise wrist
 
-<<<<<<< HEAD
             result.cmdVel = -0.3; // original '0.3' - abe
-=======
-<<<<<<< HEAD
-            result.cmdVel = -0.3; // original '0.3' - abe
-=======
-            result.cmdVel = -0.4;//original is 0.3 - abe
->>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
->>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
             result.angleError = 0.0;
         }
         return;
@@ -97,7 +89,7 @@ void DropOffController::calculateDecision() {
         result.centerGoal.y = centerLocation.y + (spinSize + addSpinSize) * sin(spinner);
         result.centerGoal.theta = atan2(result.centerGoal.y - currentLocation.y, result.centerGoal.x - currentLocation.x);
 
-        spinner += 180 *(M_PI/180); //add 45 degrees in radians to spinner. - changed to 90 - Abe
+        spinner += 45*(M_PI/180); //add 45 degrees in radians to spinner.
         if (spinner > 2*M_PI)
         {
             spinner -= 2*M_PI;
@@ -120,11 +112,11 @@ void DropOffController::calculateDecision() {
 
         if (seenEnoughCenterTags) //if we have seen enough tags
         {
-            if ((countLeft-6) > countRight) //and there are too many on the left original is 5 - Abe
+            if ((countLeft-5) > countRight) //and there are too many on the left
             {
                 right = false; //then we say non on the right to cause us to turn right
             }
-            else if ((countRight-6) > countLeft)//original is 5 - Abe
+            else if ((countRight-5) > countLeft)
             {
                 left = false; //or left in this case
             }
@@ -146,24 +138,12 @@ void DropOffController::calculateDecision() {
             result.angleError = 0.0;
         }
         else if (right) {
-<<<<<<< HEAD
             result.cmdVel = -0.1 * turnDirection;
             result.angleError = -centeringTurn*turnDirection - anglediv;
         }
         else if (left){
             result.cmdVel = -0.1 * turnDirection;
             result.angleError = centeringTurn*turnDirection - anglediv;
-<<<<<<< HEAD
-=======
-=======
-            result.cmdVel = -0.15 * turnDirection;//original is 0.1 - Abe
-            result.angleError = -centeringTurn*turnDirection;
-        }
-        else if (left){
-            result.cmdVel = -0.15 * turnDirection;//original is 0.1 - Abe
-            result.angleError = centeringTurn*turnDirection;
->>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
->>>>>>> 55feff949fc86396d6dd5775d6ef517625128407
         }
         else
         {
