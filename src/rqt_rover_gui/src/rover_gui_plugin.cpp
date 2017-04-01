@@ -3,7 +3,7 @@
 // Date: 9-16-205
 // Purpose: implementation of a simple graphical front end for the UNM-NASA Swarmathon rovers.
 // License: GPL3
-
+//TAMIU Swarmathon 2017 Final Code 03/31/2017
 #include <rover_gui_plugin.h>
 #include <Version.h>
 #include <pluginlib/class_list_macros.h>
@@ -1951,11 +1951,7 @@ QString RoverGUIPlugin::stopROSJoyNode()
 QString RoverGUIPlugin::addUniformTargets()
 {
     QProgressDialog progress_dialog;
-<<<<<<< HEAD
-    progress_dialog.setWindowTitle("Placing 100 Targets");
-=======
-    progress_dialog.setWindowTitle("Placing 256 Targets"); //256 original value
->>>>>>> 7a709764b24be41d4d752890422b841c27c9578d
+    progress_dialog.setWindowTitle("Placing 256 Targets");
     progress_dialog.setCancelButton(NULL); // no cancel button
     progress_dialog.setWindowModality(Qt::ApplicationModal);
     progress_dialog.resize(500, 50);
@@ -1967,7 +1963,7 @@ QString RoverGUIPlugin::addUniformTargets()
     float proposed_x;
     float proposed_y;
 
-    // 100 piles of 1 tag
+    // 256 piles of 1 tag
 
     // d is the distance from the center of the arena to the boundary minus the barrier clearance, i.e. the region where tags can be placed
     // is d - U(0,2d) where U(a,b) is a uniform distribition bounded by a and b.
@@ -1977,7 +1973,7 @@ QString RoverGUIPlugin::addUniformTargets()
     progress_dialog.setValue(0.0);
     qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 256; i++)
     {
         do
         {
@@ -1989,11 +1985,11 @@ QString RoverGUIPlugin::addUniformTargets()
 
         emit sendInfoLogMessage("<font color=green>Succeeded.</font>");
         output = sim_mgr.addModel(QString("at")+QString::number(0),  QString("at")+QString::number(i), proposed_x, proposed_y, 0, target_cluster_size_1_clearance);
-        progress_dialog.setValue(i*100.0f/100);
+        progress_dialog.setValue(i*100.0f/256);
         qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 
-    emit sendInfoLogMessage("Placed 100 single targets");
+    emit sendInfoLogMessage("Placed 256 single targets");
 
     return output;
 }
@@ -2679,4 +2675,3 @@ RoverGUIPlugin::~RoverGUIPlugin()
 
 
 PLUGINLIB_EXPORT_CLASS(rqt_rover_gui::RoverGUIPlugin, rqt_gui_cpp::Plugin)
-
