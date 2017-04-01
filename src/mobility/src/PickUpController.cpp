@@ -19,7 +19,7 @@ PickUpController::PickUpController() {
 
 PickUpResult PickUpController::pickUpSelectedTarget(bool blockBlock) {
     //threshold distance to be from the target block before attempting pickup
-    float targetDist = 0.25; //meters
+    float targetDist = 0.2; //0.25 meters original - Abe
 
 
     /*PickUpResult result;
@@ -69,19 +69,19 @@ PickUpResult PickUpController::pickUpSelectedTarget(bool blockBlock) {
     else if (!lockTarget) //if a target hasn't been locked lock it and enter a counting state while slowly driving forward.
     {
         lockTarget = true;
-        result.cmdVel = 0.18;
+        result.cmdVel = 0.2; // original is 0.18 - Abe
         result.angleError = 0.0;
         timeOut = true;
     }
     else if (Td > 2.4) //raise the wrist
     {
-        result.cmdVel = -0.25;
+        result.cmdVel = 0.0; // original '-0.25' - abe
         result.angleError = 0.0;
         result.wristAngle = 0;
     }
     else if (Td > 1.7) //close the fingers and stop driving
     {
-        result.cmdVel = -0.1;
+        result.cmdVel = 0.0; //original '-0.1' - abe
         result.angleError = 0.0;
         result.fingerAngle = 0;
         return result;
@@ -89,14 +89,14 @@ PickUpResult PickUpController::pickUpSelectedTarget(bool blockBlock) {
 
     if (Td > 3.8 && timeOut) //if enough time has passed enter a recovery state to re-attempt a pickup
     {
-        if (blockBlock) //if the ultrasound is blocked at less than .12 meters a block has been picked up no new pickup required
+        if (blockBlock) //if the ultrasound is blocked at less than .10 meters a block has been picked up no new pickup required //original is 0.12 - Abe
         {
             result.pickedUp = true;
         }
         else //recover begin looking for targets again
         {
             lockTarget = false;
-            result.cmdVel = -0.15;
+            result.cmdVel = 0.0;// original '-0.15' - abe
             result.angleError = 0.0;
             //set gripper
             result.fingerAngle = M_PI_2;
@@ -142,15 +142,7 @@ PickUpResult PickUpController::selectTarget(const apriltags_ros::AprilTagDetecti
             target = i;
             closest = test;
             blockDist = hypot(tagPose.pose.position.z, tagPose.pose.position.y); //distance from bottom center of chassis ignoring height.
-            if ( (blockDist*blockDist - 0.195*0.195) > 0 )
-            {
-                blockDist = sqrt(blockDist*blockDist - 0.195*0.195);
-            }
-            else
-            {
-	      float epsilon = 0.00001; // A small non-zero positive number
-	      blockDist = epsilon;
-            }
+            blockDist = sqrt(blockDist*blockDist - 0.195*0.195);
             blockYawError = atan((tagPose.pose.position.x + 0.020)/blockDist)*1.05; //angle to block from bottom center of chassis on the horizontal.
         }
     }
