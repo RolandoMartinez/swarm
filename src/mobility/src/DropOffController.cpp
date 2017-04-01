@@ -2,9 +2,9 @@
 
 DropOffController::DropOffController() {
     cameraOffsetCorrection = 0.020; //meters
-    centeringTurn = 0.15; //radians
+    centeringTurn = 0.3; //radians
     seenEnoughCenterTagsCount = 10;
-    collectionPointVisualDistance = 0.5; //in meters
+    collectionPointVisualDistance = 0.55; //in meters 0.5 original - Abe
     reachedCollectionPoint = false;
     spinSize = 0.10; //in meters aka 10cm 
     addSpinSizeAmmount = 0.10; //in meters
@@ -31,7 +31,7 @@ DropOffController::DropOffController() {
     circularCenterSearching = false;
     prevCount = 0;
 
-    searchVelocity = 0.15;
+    searchVelocity = 0.15; // original is 0.15 - Abe
 }
 
 
@@ -64,7 +64,7 @@ void DropOffController::calculateDecision() {
             angle= 0;
             result.wristAngle = angle; //raise wrist
 
-            result.cmdVel = -0.3;
+            result.cmdVel = -0.3; // original '0.3' - abe
             result.angleError = 0.0;
         }
         return;
@@ -123,9 +123,13 @@ void DropOffController::calculateDecision() {
         }
 
         float turnDirection = 1;
-        //reverse tag rejection when we have seen enough tags that we are on a
+	float anglediv = 0;        //reverse tag rejection when we have seen enough tags that we are on a
         //trajectory in to the square we dont want to follow an edge.
-        if (seenEnoughCenterTags) turnDirection = -1;
+        if (seenEnoughCenterTags) 
+	{
+	   turnDirection = -1;
+	   anglediv = 0.2;
+	}
 
 
         //otherwise turn till tags on both sides of image then drive straight
@@ -135,11 +139,11 @@ void DropOffController::calculateDecision() {
         }
         else if (right) {
             result.cmdVel = -0.1 * turnDirection;
-            result.angleError = -centeringTurn*turnDirection;
+            result.angleError = -centeringTurn*turnDirection - anglediv;
         }
         else if (left){
             result.cmdVel = -0.1 * turnDirection;
-            result.angleError = centeringTurn*turnDirection;
+            result.angleError = centeringTurn*turnDirection - anglediv;
         }
         else
         {
