@@ -634,14 +634,18 @@ void obstacleHandler(const std_msgs::UInt8::ConstPtr& message) {
         // obstacle on right side
         if (message->data == 1) {
             // select new heading original 0.2 radians to the left now is 0.15 radians - Abe
-	sendDriveCommand(-0.1,0); //added - abe            
+            if (currentMode == 2 || currentMode == 3) { //robot is in automode
+                sendDriveCommand(-0.1,0); //added - abe
+            }
 	goalLocation.theta = currentLocation.theta + 0.45; // original is 0.6 -Abe
         }
 
         // obstacle in front or on left side
         else if (message->data == 2) {
             // select new heading 0.2 radians to the right
-	    sendDriveCommand(-0.1,0); //added - abe 
+            if (currentMode == 2 || currentMode == 3) { //robot is in automode
+                sendDriveCommand(-0.1,0); //added - abe
+            }
             goalLocation.theta = currentLocation.theta - 0.45; // original is + 0.6 - Abe
         }
 
